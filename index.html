@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>เตือนดื่มน้ำ 💧</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/728/728093.png">
+  <meta name="theme-color" content="#00bcd4">
+</head>
+<body>
+  <h1>💧 ตัวช่วยเตือนดื่มน้ำ</h1>
+  <p id="status">ยังไม่เริ่มทำงาน</p>
+  <button onclick="startReminder()">เริ่มเตือน</button>
+
+  <audio id="alarm-sound" src="https://www.soundjay.com/buttons/sounds/beep-07.mp3" preload="auto"></audio>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+
+    function notify() {
+      const sound = document.getElementById("alarm-sound");
+      sound.play();
+      document.getElementById("status").innerText = "เตือนล่าสุด: " + new Date().toLocaleTimeString();
+
+      if (Notification.permission === "granted") {
+        new Notification("💧 ถึงเวลาดื่มน้ำ!", {
+          body: "ดื่มน้ำสักแก้วเพื่อสุขภาพ 💙",
+          icon: "https://cdn-icons-png.flaticon.com/512/728/728093.png"
+        });
+      }
+    }
+
+    function startReminder() {
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+
+      notify();
+      setInterval(notify, 3600000);
+    }
+  </script>
+</body>
+</html>
